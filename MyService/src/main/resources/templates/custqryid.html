@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>客戶資料查詢</title>
+        <meta charset="UTF-8"/>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> <!-- 這個是ajax框架,ajax與下面axios-->
+    <!--	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
+    這個是axios框架,如果要使用此框架,下面標註的要解開並將ajax標註,請不要使用因為沒有錯誤訊息視窗提示 -->
+    
+    </head>
+    <body>
+    <!--id 提供Vue物件的binding-->
+        <fieldset id="app">
+            <legend>客戶查詢-客戶編號</legend>
+            <div>
+                <div>客戶編號</div>
+                <!--使用Vue Data Model進行雙向綁定-->
+                <input type="text" v-model:value="customerid" maxlength="5"/>
+                <button v-on:click="query">查詢</button>
+            </div>
+            <div>
+                <div>查詢客戶編號:{{customerid}}</div>
+                <div>{{message}}</div>
+            </div>
+            <!--查詢結果呈現 isShow flag-->
+            <fieldset v-show="isShow">
+                <legend>查詢結果</legend>
+                <table>
+                    <tr>
+                        <td>客戶編號</td>
+                        <td>{{result.customerId}}</td>
+                    </tr>
+                    <tr>
+                        <td>公司行號</td>
+                        <td>{{result.companyName}}</td>
+                    </tr>
+                    <tr>
+                        <td>聯絡地址</td>
+                        <td>{{result.address}}</td>
+                    </tr>
+                    <tr>
+                        <td>聯絡電話</td></td></td>
+                        <td>{{result.phone}}</td>
+                    </tr>
+                    <tr>
+                        <td>國家別</td>
+                        <td>{{result.country}}</td>
+                    </tr>
+                </table>    
+            </fieldset>
+        </fieldset>
+
+        <script type="text/javascript">
+            //建構一個Vue Instance
+            var app=new Vue(
+                //settings JS物件
+                {
+                    el:'#app',
+                    //Data Model
+                    data:{
+                        customerid:'1111',
+                        message:'',
+                        result:{customerId:'',companyName:'',address:'',phone:'',country:''},
+                        isShow:false
+                    },
+                    methods:{
+                        query:function(){
+                            app.isShow=false;
+                            console.log("查詢編號:"+this.customerid);
+                
+                                // //axios非同步化處裡
+                            // //relative Document
+                            // var serviceURL='qry/id/'+this.customerid+'/rawdata';
+                            // //使用axios
+                            // axios.get(serviceURL)
+                            // .then((response)=>{
+                            //     console.log(response);
+                            //     if(response.status==200){
+                            //         app.isShow=true;
+                            //         console.log(typeof response.data);
+                            //         //重新指派給Vue Data Model
+                            //         app.result=response.data;
+							// 	}
+                            // })
+                            // .catch((error)=>{
+                            //     console.log(error);
+                            // })
+
+                            //進行非同步處理(AJAX-XMLHttpRequest/XMLHttpResponse)
+                            var serviceURL='../nor/customers/id/'+this.customerid+'/rawdata';
+                           	$.ajax(
+                           //JS物件屬性定義相對屬性
+							{
+								//呼喚服務位址
+								url:serviceURL,
+								//傳送方式
+								type:'GET',
+								//callback status code:2xx
+								success:function(data,status,xhr){
+									console.log(data);
+                                    app.isShow=true;
+                                    //將callback結果(Json Object)指派給Vue Data Model
+                                    app.result=data;
+                                    //TODO  Render UI(渲染畫面)
+								},
+                                //callback status 4xx or 5xx
+                                error:function(xhr,status,error){
+                                    var errorMsg=xhr.responseText;
+                                    //反序列化成JS 物件
+                                    var errorObj=JSON.parse(errorMsg);
+                                    alert(errorObj.msg);
+                                }
+							}	
+		
+							);
+                
+                        }
+                    },
+                    watch:{
+                        "customerid":function(newValue,oldValue){
+                           console.log('輸入的新編號:'+newValue);
+                           //Client 即時性Validation(驗證)
+                           if(newValue.length==0){
+                               this.message="客戶編號尚未輸入!!!";
+                           }else{
+                               this.message="";
+                           }     
+                        }
+                    }
+                }
+
+            );
+        </script>
+    </body>
+</html>
