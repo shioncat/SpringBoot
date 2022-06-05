@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<title>採購明細維護</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container my-2">
+		<div th:include="header :: header"></div>
+		<h1>採購主檔資料</h1>
+		<table border="1" class="table table-striped table-responsive-md">
+			<tr>
+				<th>採購序號</th>
+				<th>採購日期</th>
+				<th>廠商名稱</th>
+				<th>經手員工</th>
+				<th>項目筆數</th>
+				<th>訂單總價</th>
+			</tr>
+ 			<tr>
+				<td th:text="${ purchase.id }"></td>
+				<td th:text="${ purchase.date }"></td>
+				<td th:text="${ purchase.supplier.name }"></td>
+				<td th:text="${ purchase.employee.name }"></td>
+				<td th:text="${ #lists.size(purchase.purchaseItems) }"></td>
+				<td th:text="${ purchase.total }"></td>
+			</tr> 
+		</table>
+ 		<h1>採購明細資料</h1>
+		<table border="1" class="table table-striped table-responsive-md">
+			<tr>
+				<th>序號</th>
+				<th>項目序號</th>
+				<th>商品序號</th>
+				<th>商品名稱</th>
+				<th>商品成本</th>
+				<th>數量</th>
+				<th>小計</th>
+				<th>編輯</th>
+				<th>刪除</th>
+			</tr>
+			<tr th:each="item, itemstat:${purchase.purchaseItems}">
+				<td th:text="${ itemstat.index }">0</td>
+				<td th:text="${ item.id }">0</td>
+				<td th:text="${ item.product.id }">0</td>
+				<td th:text="${ item.product.name }">0</td>
+				<td th:text="${ item.product.price }">0</td>
+				<td th:text="${ item.amount }">0</td>
+				<td th:text="${ item.amount * item.product.price }">0</td>
+				<td><a
+					th:href="@{/purchase/{pid}/edit/item/{iid}(pid=${purchase.id}, iid=${item.id})}" class="btn btn-primary">編輯</a></td>
+				<td><a
+					th:href="@{/purchase/{pid}/delete/item/{iid}(pid=${purchase.id}, iid=${item.id})}" class="btn btn-danger">刪除</a></td> 
+			</tr>
+		</table>
+		<form action="#" th:action="@{/purchase/{pid}/add/item(pid=${purchase.id})}"
+			th:object="${purchaseItem}" method="post">
+			
+			<div class="form-group" th:if="*{id} != null">
+				<label for="purchaseItem.id">項目序號:</label>
+				<input type="text" readonly
+					th:field="*{id}" id="id" placeholder="id" class="form-control">
+			</div>
+					
+ 			<div class="form-group">
+				<label for="product.id">商品:</label> 
+				<select class="form-control select2" th:field="*{product.id}" id="product.id">
+					<option th:selected="(${p.id} eq (*{product.id}?:0))"
+						th:each="p:${products}" th:value="${p.id}" th:text="${p.name}"></option>
+				</select>
+			</div>  
+			<div class="form-group">
+				<label for="amount">數量:</label> <input type="text"
+					th:field="*{amount}" id="amount" placeholder="amount" class="form-control">
+			</div>
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+    			<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+			</div> 
+			<input type="submit" th:value="(*{id} == null ? '新增採購項目' : '修改採購項目')"  class="btn btn-primary">
+		</form> 
+		<div th:include="footer :: footer"></div>  
+	</div>  
+</body>
+</html>

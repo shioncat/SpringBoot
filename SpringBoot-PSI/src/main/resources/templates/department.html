@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>部門員工資料維護</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container my-2">
+		<!-- Header -->
+		<div th:include="header :: header"></div>
+		
+		<!-- Content -->
+		<h1>新增部門</h1>
+		<form th:action="@{/department/create}"
+			  th:object="${department}"
+			  method="post">
+			  <div class="form-group">
+			  	<label for="name">部門名稱：</label>
+			  	<input type="text" 
+			  		   th:field="*{name}" 
+			  		   placeholder="請輸入部門名稱" 
+			  		   class="form-control" />
+			  </div>
+			  <input type="submit" value="新增部門" class="btn btn-primary">
+		</form>
+		<p />
+		<h1>部門列表</h1>
+		<table border="1" class="table table-striped table-responsive-md">
+			<thead>
+				<tr>
+					<th>序號</th>
+					<th>部門名稱</th>
+					<th>員工</th>
+					<th>編輯</th>
+					<th>刪除</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="department : ${departments}">
+					<td th:text="${department.id}"></td>
+					<td th:text="${department.name}"></td>
+					<td>
+						<a th:href="@{/employee/?department_id={id}(id=${department.id})}" class="btn btn-success">檢視員工</a>
+					</td>
+					<td>
+						<a th:href="@{/department/edit/{id}(id=${department.id})}" class="btn btn-primary">編輯</a>
+					</td>
+					<td>
+						<a th:if="${#lists.size(department.employees) == 0}" th:href="@{/department/delete/{id}(id=${department.id})}" class="btn btn-danger">刪除</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		
+		<!-- Footer -->
+		<div th:include="footer :: footer"></div>
+	</div>
+</body>
+</html>
