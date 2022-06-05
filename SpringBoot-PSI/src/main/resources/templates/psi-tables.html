@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="UTF-8">
+	<title>PSI 資料表關聯圖</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container my-2">
+		<!-- Header -->
+		<div th:include="header :: header"></div>
+		
+		<!-- Content -->
+		<h1>PSI 資料表關聯圖</h1>
+		<img class="img-fluid" th:src="@{/images/psi_tables.png}" alt="看到我表示現在是破圖狀態" title="PSI 資料表關聯圖" />
+		
+		<!-- Footer -->
+		<div th:include="footer :: footer"></div>
+	</div>
+</body>
+</html>

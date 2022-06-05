@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>員工資料修改</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container my-2">
+		<!-- Header -->
+		<div th:include="header :: header"></div>
+		
+		<!-- Content -->
+		<h1>員工資料修改</h1>
+		<form th:action="@{/employee/update/{id}(id=${employee.id})}"
+			  th:object="${employee}"
+			  method="post">
+			  <div class="form-group">
+			  	<label for="name">部門名稱：</label>
+			  	<select class="form-control select2"
+			  			th:field="*{department.id}">
+			  		<option th:each="d:${departments}" th:value="${d.id}" th:text="${d.name}"></option>
+			  	</select>
+			  </div>
+			  <div class="form-group">
+			  	<label for="name">員工姓名：</label>
+			  	<input type="text" 
+			  		   th:field="*{name}" 
+			  		   placeholder="請輸入員工姓名" 
+			  		   class="form-control" />
+			  </div>
+			  <input type="submit" value="修改員工資料" class="btn btn-primary">
+		</form>
+		
+		<!-- Footer -->
+		<div th:include="footer :: footer"></div>
+	</div>
+</body>
+</html>
