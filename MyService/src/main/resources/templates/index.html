@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>我是首頁Home</title>
+		<meta charset="UTF-8"/>
+		<!--CDN-->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--vue instance binding top element-->
+		<fieldset id="app">
+			<legend>Vue Demo</legend>
+			<h1>您好 {{message}}</h1>
+			<div><input type="text" v-model:text="keyin"/></div>
+			<div>輸入內容(同步Binding):{{keyin}}</div>
+		</fieldset>
+		
+		<script type="text/javascript">
+			//建構一個Vue Instance
+			var app=new Vue(
+				//Javascript 物件定義屬性
+				{
+					el:'#app',
+					//資料模組
+					data:{
+						message:'世界和平',
+						keyin:''
+					}
+				}
+				
+			);
+		</script>
+	</body>
+</html>
